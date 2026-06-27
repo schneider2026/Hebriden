@@ -308,15 +308,15 @@ a.bl{color:var(--blue2);font-size:10px;text-decoration:none}a.bl:hover{text-deco
 .toast.show{opacity:1}
 
 /* ═══ PIN / BIOMETRIC LOCK ═══════════════════════════════ */
-#lock-screen{position:fixed;inset:0;background:linear-gradient(135deg,var(--brown),var(--brown2));z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+#lock-screen{position:fixed;inset:0;background:linear-gradient(135deg,var(--brown),var(--brown2));z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;touch-action:manipulation}
 .lock-logo{font-size:48px;margin-bottom:8px}
 .lock-title{color:#fff;font-size:22px;font-weight:700;margin-bottom:4px}
 .lock-sub{color:rgba(255,255,255,.7);font-size:13px;margin-bottom:32px;text-align:center}
 .pin-dots{display:flex;gap:14px;margin-bottom:28px}
 .pin-dot{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.5);transition:all .2s}
 .pin-dot.filled{background:#fff;border-color:#fff}
-.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:240px}
-.pin-key{background:rgba(255,255,255,.15);border:none;border-radius:14px;color:#fff;font-size:22px;font-weight:600;height:64px;cursor:pointer;font-family:inherit;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:240px;position:relative;z-index:10000}
+.pin-key{background:rgba(255,255,255,.15);border:none;border-radius:14px;color:#fff;font-size:22px;font-weight:600;height:64px;cursor:pointer;font-family:inherit;transition:all .15s;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;-webkit-user-select:none}
 .pin-key:active{background:rgba(255,255,255,.35);transform:scale(.94)}
 .pin-key.del{font-size:18px}
 .pin-key.bio{font-size:24px}
@@ -358,18 +358,18 @@ a.bl{color:var(--blue2);font-size:10px;text-decoration:none}a.bl:hover{text-deco
     <div class="pin-dot" id="pd3"></div>
   </div>
   <div class="pin-pad" id="pin-pad">
-    <button class="pin-key" onclick="pinKey('1')">1</button>
-    <button class="pin-key" onclick="pinKey('2')">2</button>
-    <button class="pin-key" onclick="pinKey('3')">3</button>
-    <button class="pin-key" onclick="pinKey('4')">4</button>
-    <button class="pin-key" onclick="pinKey('5')">5</button>
-    <button class="pin-key" onclick="pinKey('6')">6</button>
-    <button class="pin-key" onclick="pinKey('7')">7</button>
-    <button class="pin-key" onclick="pinKey('8')">8</button>
-    <button class="pin-key" onclick="pinKey('9')">9</button>
-    <button class="pin-key bio" id="bio-btn" onclick="tryBiometric()">⬡</button>
-    <button class="pin-key" onclick="pinKey('0')">0</button>
-    <button class="pin-key del" onclick="pinDel()">⌫</button>
+    <button class="pin-key" data-digit="1">1</button>
+    <button class="pin-key" data-digit="2">2</button>
+    <button class="pin-key" data-digit="3">3</button>
+    <button class="pin-key" data-digit="4">4</button>
+    <button class="pin-key" data-digit="5">5</button>
+    <button class="pin-key" data-digit="6">6</button>
+    <button class="pin-key" data-digit="7">7</button>
+    <button class="pin-key" data-digit="8">8</button>
+    <button class="pin-key" data-digit="9">9</button>
+    <button class="pin-key bio" id="bio-btn">⬡</button>
+    <button class="pin-key" data-digit="0">0</button>
+    <button class="pin-key del" id="pin-del-btn">⌫</button>
   </div>
   <div class="pin-error" id="pin-error"></div>
   <div class="pin-setup-hint" id="pin-setup-hint" style="display:none">Noch kein PIN gesetzt. Lege jetzt einen 4-stelligen PIN fest der für Achim & Katja gilt.</div>
@@ -2087,8 +2087,32 @@ function adoptPdfBookingDirect() {
   renderBookings();
 }
 
-// Init
-document.addEventListener('DOMContentLoaded', initLock);
+// PIN pad touch events — robuster als onclick auf iOS
+document.addEventListener('DOMContentLoaded', function() {
+  // Digit buttons
+  document.querySelectorAll('.pin-key[data-digit]').forEach(btn => {
+    btn.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      pinKey(this.getAttribute('data-digit'));
+    });
+    btn.addEventListener('click', function() {
+      pinKey(this.getAttribute('data-digit'));
+    });
+  });
+  // Delete button
+  const delBtn = document.getElementById('pin-del-btn');
+  if(delBtn) {
+    delBtn.addEventListener('touchend', function(e){ e.preventDefault(); pinDel(); });
+    delBtn.addEventListener('click', pinDel);
+  }
+  // Bio button
+  const bioBtn = document.getElementById('bio-btn');
+  if(bioBtn) {
+    bioBtn.addEventListener('touchend', function(e){ e.preventDefault(); tryBiometric(); });
+    bioBtn.addEventListener('click', tryBiometric);
+  }
+  initLock();
+});
 
 </script>
 </body>
