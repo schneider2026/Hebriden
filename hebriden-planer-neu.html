@@ -383,7 +383,7 @@ a.bl{color:var(--blue2);font-size:10px;text-decoration:none}a.bl:hover{text-deco
   </div>
 
   <!-- Kein PIN: Setup starten -->
-  <div id="pin-nopin-wrap" style="display:none">
+  <div id="pin-nopin-wrap" style="display:block">
     <div style="color:rgba(255,255,255,.6);font-size:12px;text-align:center;max-width:260px;line-height:1.6;margin-bottom:16px">Noch kein PIN gesetzt. Lege jetzt einen 4-stelligen PIN fest.</div>
     <button id="pin-start-setup-btn"
       style="width:200px;height:48px;border-radius:12px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;font-size:14px;font-weight:600;cursor:pointer;display:block;margin:0 auto">
@@ -1718,6 +1718,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   initLock();
 });
+
+// Direkter Aufruf falls DOMContentLoaded schon gefeuert
+if(document.readyState==='complete'||document.readyState==='interactive'){setTimeout(initLock,50);}
 
 function checkPin() {
   const inp = document.getElementById('pin-native-input');
