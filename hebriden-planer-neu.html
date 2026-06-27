@@ -356,14 +356,16 @@ a.bl{color:var(--blue2);font-size:10px;text-decoration:none}a.bl:hover{text-deco
   <div id="pin-input-wrap" style="display:none">
     <div style="color:rgba(255,255,255,.8);font-size:12px;text-align:center;margin-bottom:10px">4-stelligen PIN eingeben</div>
     <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" id="pin-native-input"
+      oninput="if(this.value.length===4)setTimeout(checkPin,150)"
+      onkeydown="if(event.key==='Enter')checkPin()"
       style="width:160px;height:56px;border-radius:14px;border:2px solid rgba(255,255,255,.4);background:rgba(255,255,255,.15);color:#fff;font-size:28px;font-weight:700;text-align:center;letter-spacing:8px;outline:none;display:block;margin:0 auto"
       placeholder="••••" autocomplete="off" autocorrect="off" spellcheck="false">
     <div id="pin-error" style="color:#ffb3b3;font-size:13px;margin-top:10px;min-height:20px;text-align:center"></div>
-    <button id="pin-submit-btn"
+    <button onclick="checkPin()"
       style="margin-top:12px;width:160px;height:48px;border-radius:12px;background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.5);color:#fff;font-size:16px;font-weight:600;cursor:pointer;display:block;margin-left:auto;margin-right:auto">
       Entsperren
     </button>
-    <button id="bio-btn"
+    <button id="bio-btn" onclick="tryBiometric()"
       style="margin-top:10px;width:160px;height:44px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.8);font-size:14px;cursor:pointer;display:none;margin-left:auto;margin-right:auto">
       👤 Face ID verwenden
     </button>
@@ -373,10 +375,11 @@ a.bl{color:var(--blue2);font-size:10px;text-decoration:none}a.bl:hover{text-deco
   <div id="pin-setup-wrap" style="display:none">
     <div style="color:rgba(255,255,255,.8);font-size:12px;text-align:center;margin-bottom:10px" id="setup-label">Neuen PIN wählen (4 Stellen)</div>
     <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" id="pin-setup-input"
+      oninput="if(this.value.length===4)setTimeout(handleSetupStep,150)"
       style="width:160px;height:56px;border-radius:14px;border:2px solid rgba(255,255,255,.4);background:rgba(255,255,255,.15);color:#fff;font-size:28px;font-weight:700;text-align:center;letter-spacing:8px;outline:none;display:block;margin:0 auto"
       placeholder="••••" autocomplete="new-password" autocorrect="off" spellcheck="false">
     <div id="setup-error" style="color:#ffb3b3;font-size:13px;margin-top:10px;min-height:20px;text-align:center"></div>
-    <button id="pin-setup-btn"
+    <button onclick="handleSetupStep()"
       style="margin-top:12px;width:160px;height:48px;border-radius:12px;background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.5);color:#fff;font-size:16px;font-weight:600;cursor:pointer;display:block;margin-left:auto;margin-right:auto">
       Weiter
     </button>
@@ -385,7 +388,7 @@ a.bl{color:var(--blue2);font-size:10px;text-decoration:none}a.bl:hover{text-deco
   <!-- Kein PIN: Setup starten -->
   <div id="pin-nopin-wrap" style="display:block">
     <div style="color:rgba(255,255,255,.6);font-size:12px;text-align:center;max-width:260px;line-height:1.6;margin-bottom:16px">Noch kein PIN gesetzt. Lege jetzt einen 4-stelligen PIN fest.</div>
-    <button id="pin-start-setup-btn"
+    <button onclick="startPinSetup()"
       style="width:200px;height:48px;border-radius:12px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;font-size:14px;font-weight:600;cursor:pointer;display:block;margin:0 auto">
       PIN jetzt festlegen
     </button>
