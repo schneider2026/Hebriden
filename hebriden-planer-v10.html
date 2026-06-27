@@ -307,74 +307,10 @@ a.bl{color:var(--blue2);font-size:10px;text-decoration:none}a.bl:hover{text-deco
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--brown);color:#fff;padding:9px 18px;border-radius:22px;font-size:12px;font-weight:600;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1}
 
-/* ═══ PIN / BIOMETRIC LOCK ═══════════════════════════════ */
-#lock-screen{position:fixed;inset:0;background:linear-gradient(135deg,var(--brown),var(--brown2));z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
-.lock-logo{font-size:48px;margin-bottom:8px}
-.lock-title{color:#fff;font-size:22px;font-weight:700;margin-bottom:4px}
-.lock-sub{color:rgba(255,255,255,.7);font-size:13px;margin-bottom:32px;text-align:center}
-.pin-dots{display:flex;gap:14px;margin-bottom:28px}
-.pin-dot{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.5);transition:all .2s}
-.pin-dot.filled{background:#fff;border-color:#fff}
-.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:240px}
-.pin-key{background:rgba(255,255,255,.15);border:none;border-radius:14px;color:#fff;font-size:22px;font-weight:600;height:64px;cursor:pointer;font-family:inherit;transition:all .15s;-webkit-tap-highlight-color:transparent}
-.pin-key:active{background:rgba(255,255,255,.35);transform:scale(.94)}
-.pin-key.del{font-size:18px}
-.pin-key.bio{font-size:24px}
-.pin-error{color:#ffb3b3;font-size:13px;margin-top:12px;min-height:20px;text-align:center}
-.pin-setup-hint{color:rgba(255,255,255,.6);font-size:11px;margin-top:16px;text-align:center;max-width:260px;line-height:1.5}
-.btn-setup-pin{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:12px}
-/* ═══ PDF KI-ANALYSE ════════════════════════════════════ */
-.pdf-analyse-btn{background:linear-gradient(135deg,#1a4a7a,#2563a8);border:none;color:#fff;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;margin-left:8px}
-.pdf-analyse-btn:hover{opacity:.9}
-#pdf-modal .modal{max-height:90vh}
-.pdf-preview-card{background:linear-gradient(135deg,#eef6ff,#f0f8ee);border:1px solid #b0d0f0;border-radius:12px;padding:14px;margin-bottom:12px}
-.pdf-preview-title{font-size:14px;font-weight:700;color:var(--brown);margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.pdf-field{margin-bottom:8px}
-.pdf-field label{display:block;font-size:10px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
-.pdf-field .val{font-size:13px;color:var(--txt);background:var(--white);border-radius:6px;padding:6px 9px;border:1px solid var(--sand3)}
-.pdf-field .val.editable{border-color:var(--brown3)}
-.pdf-routing-box{background:#fff8e8;border:1px solid #e8d090;border-radius:8px;padding:9px 12px;font-size:12px;color:#5a4000;line-height:1.6;margin-bottom:10px}
-.pdf-loading{display:flex;flex-direction:column;align-items:center;gap:10px;padding:24px;color:var(--txt3);font-size:13px}
-.pdf-spinner{width:32px;height:32px;border:3px solid var(--sand3);border-top-color:var(--brown);border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.pdf-action-row{display:flex;gap:8px;margin-top:6px}
-.btn-adopt-prog{flex:1;background:var(--green2);border:none;color:#fff;border-radius:9px;padding:11px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
-.btn-adopt-book{flex:1;background:var(--brown);border:none;color:#fff;border-radius:9px;padding:11px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
-.btn-adopt-both{width:100%;background:linear-gradient(135deg,var(--green2),var(--brown2));border:none;color:#fff;border-radius:9px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:6px}
-
 </style>
 </head>
 <body>
 
-<!-- ═══ LOCK SCREEN ═══════════════════════════════════════ -->
-<div id="lock-screen">
-  <div class="lock-logo">🏴󠁧󠁢󠁳󠁣󠁴󠁿</div>
-  <div class="lock-title">Hebriden 2026</div>
-  <div class="lock-sub" id="lock-sub">Achim & Katja · Reiseplaner</div>
-  <div class="pin-dots" id="pin-dots">
-    <div class="pin-dot" id="pd0"></div>
-    <div class="pin-dot" id="pd1"></div>
-    <div class="pin-dot" id="pd2"></div>
-    <div class="pin-dot" id="pd3"></div>
-  </div>
-  <div class="pin-pad" id="pin-pad">
-    <button class="pin-key" onclick="pinKey('1')">1</button>
-    <button class="pin-key" onclick="pinKey('2')">2</button>
-    <button class="pin-key" onclick="pinKey('3')">3</button>
-    <button class="pin-key" onclick="pinKey('4')">4</button>
-    <button class="pin-key" onclick="pinKey('5')">5</button>
-    <button class="pin-key" onclick="pinKey('6')">6</button>
-    <button class="pin-key" onclick="pinKey('7')">7</button>
-    <button class="pin-key" onclick="pinKey('8')">8</button>
-    <button class="pin-key" onclick="pinKey('9')">9</button>
-    <button class="pin-key bio" id="bio-btn" onclick="tryBiometric()">⬡</button>
-    <button class="pin-key" onclick="pinKey('0')">0</button>
-    <button class="pin-key del" onclick="pinDel()">⌫</button>
-  </div>
-  <div class="pin-error" id="pin-error"></div>
-  <div class="pin-setup-hint" id="pin-setup-hint" style="display:none">Noch kein PIN gesetzt. Lege jetzt einen 4-stelligen PIN fest der für Achim & Katja gilt.</div>
-  <button class="btn-setup-pin" id="setup-pin-btn" style="display:none" onclick="startPinSetup()">PIN jetzt festlegen</button>
-</div>
 
 
 <div class="hdr">
@@ -383,7 +319,7 @@ a.bl{color:var(--blue2);font-size:10px;text-decoration:none}a.bl:hover{text-deco
     <div class="hdr-right">
       <button class="btn-hdr" onclick="openBookingModal(null)">＋ Buchung</button>
       <span id="sync-status" style="font-size:10px;opacity:0;transition:opacity .5s;color:rgba(255,255,255,.85);white-space:nowrap;max-width:130px;overflow:hidden;text-overflow:ellipsis">☁️</span>
-      <button onclick="changePin()" title="PIN ändern" style="background:rgba(255,255,255,.15);border:none;color:#fff;border-radius:8px;padding:6px 9px;font-size:16px;cursor:pointer;line-height:1">🔒</button><div class="prog-pill"><div class="pct" id="main-pct">68%</div><div class="sub">geplant</div></div>
+      <div class="prog-pill"><div class="pct" id="main-pct">68%</div><div class="sub">geplant</div></div>
     </div>
   </div>
   <div class="prog-bar"><div class="prog-fill" id="main-prog" style="width:68%"></div></div>
@@ -716,7 +652,10 @@ const BOOKINGS_DEFAULT=[
   {id:'b8',date:'08.07.',sortDate:'2026-07-08',name:'DFDS Newcastle→Amsterdam',ref:'24872391',url:'https://www.dfds.com',cancelled:false},
 ];
 
-// ═══ STATE ══════════════════════════════════════
+// ═══ API KEY ═════════════════════════════════════
+const ANTHROPIC_API_KEY = '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';
+
+/ ═══ STATE ══════════════════════════════════════
 let bookings=JSON.parse(localStorage.getItem('heb_b3')||JSON.stringify(BOOKINGS_DEFAULT));
 let customEntries=JSON.parse(localStorage.getItem('heb_ce3')||'{}');
 let clChecked=JSON.parse(localStorage.getItem('heb_cl')||'{}');
@@ -1128,7 +1067,7 @@ Datum: ${date||'?'}, Von: ${from}, Nach: ${to}, km: ${km||'?'}, Notizen: ${notes
 
 Prüfe auf Deutsch (max 4 Sätze): 1) Passt ins Datum? 2) Route logisch? 3) Konflikte mit Fähren/Buchungen? 4) km realistisch? 5) Buchungsbedarf?`;
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:400,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true','x-api-key':ANTHROPIC_API_KEY},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:400,messages:[{role:'user',content:prompt}]})});
     const d=await r.json();
     const txt=d.content?.[0]?.text||'Keine Antwort.';
     box.innerHTML='🤖 <strong>KI-Prüfung:</strong><br>'+esc(txt).replace(/\n/g,'<br>');
@@ -1150,11 +1089,13 @@ function triggerUpload(key){
   const inp=document.createElement('input');
   inp.type='file';
   inp.accept='application/pdf,image/*';
-  inp.style.cssText='position:fixed;top:-100px;left:-100px;opacity:0;width:1px;height:1px';
-  inp.onchange=function(){
+  inp.style.cssText='position:fixed;top:-200px;left:-200px;opacity:0;width:1px;height:1px;pointer-events:none';
+  // iOS Safari Fix: append BEFORE click, use addEventListener with capture
+  document.body.appendChild(inp);
+  inp.addEventListener('change', function(){
     const file=inp.files[0];
-    if(!file){document.body.removeChild(inp);return;}
-    if(file.size>3.5*1024*1024){toast('⚠️ Datei zu groß (max 3,5 MB)','var(--red)');document.body.removeChild(inp);return;}
+    if(!file){if(inp.parentNode)document.body.removeChild(inp);return;}
+    if(file.size>3.5*1024*1024){toast('⚠️ Datei zu groß (max 3,5 MB)','var(--red)');if(inp.parentNode)document.body.removeChild(inp);return;}
     const reader=new FileReader();
     reader.onload=function(){
       if(!attachments[key])attachments[key]=[];
@@ -1162,11 +1103,10 @@ function triggerUpload(key){
       save();
       renderDays();renderBookings();
       toast('📎 '+file.name+' angehängt','var(--green2)');
-      document.body.removeChild(inp);
+      if(inp.parentNode)document.body.removeChild(inp);
     };
     reader.readAsDataURL(file);
-  };
-  document.body.appendChild(inp);
+  }, {once:true});
   inp.click();
 }
 function openAttachment(key,idx){
@@ -1431,7 +1371,7 @@ async function sendGapMsg(){
   const loadDiv=appendMsg('🤖 Denke nach...','ai loading');
   try{
     const msgs=gapChatHistory.map(m=>({role:m.role,content:m.content}));
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:700,system:TRIP_CTX,messages})});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true','x-api-key':ANTHROPIC_API_KEY},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:700,system:TRIP_CTX,messages})});
     const d=await r.json();
     let txt=d.content&&d.content[0]&&d.content[0].text?d.content[0].text:'Keine Antwort.';
     gapChatHistory.push({role:'assistant',content:txt});
@@ -1619,467 +1559,7 @@ renderBookings();
 renderChecklist();
 setTimeout(()=>{if(document.getElementById('conflict-box'))renderConflicts();},100);
 
-// ═══════════════════════════════════════════
-// PIN / BIOMETRIC LOCK
-// ═══════════════════════════════════════════
-const PIN_KEY = 'heb_pin';
-const SESSION_KEY = 'heb_unlocked';
-let pinBuffer = '';
-let pinSetupMode = false;
-let pinSetupFirst = '';
 
-function initLock() {
-  const storedPin = localStorage.getItem(PIN_KEY);
-  const sessionOk = sessionStorage.getItem(SESSION_KEY) === '1';
-
-  if (sessionOk) {
-    // Already unlocked this session
-    hideLockScreen();
-    return;
-  }
-
-  if (!storedPin) {
-    // No PIN set yet — show setup prompt
-    document.getElementById('lock-sub').textContent = 'Bitte PIN festlegen';
-    document.getElementById('pin-setup-hint').style.display = 'block';
-    document.getElementById('setup-pin-btn').style.display = 'block';
-    document.getElementById('pin-pad').style.display = 'none';
-    document.getElementById('pin-dots').style.display = 'none';
-    updateBioBtn();
-    return;
-  }
-
-  // PIN exists — show lock screen & try biometric first
-  document.getElementById('lock-sub').textContent = 'Zum Entsperren PIN eingeben';
-  updateBioBtn();
-  setTimeout(() => tryBiometric(), 400);
-}
-
-function startPinSetup() {
-  pinSetupMode = true;
-  pinSetupFirst = '';
-  pinBuffer = '';
-  document.getElementById('pin-setup-hint').style.display = 'none';
-  document.getElementById('setup-pin-btn').style.display = 'none';
-  document.getElementById('pin-pad').style.display = 'grid';
-  document.getElementById('pin-dots').style.display = 'flex';
-  document.getElementById('lock-sub').textContent = 'Neuen PIN wählen (4 Stellen)';
-  updateDots();
-}
-
-function pinKey(digit) {
-  if (pinBuffer.length >= 4) return;
-  pinBuffer += digit;
-  updateDots();
-  if (pinBuffer.length === 4) {
-    setTimeout(() => handlePinComplete(), 150);
-  }
-}
-
-function pinDel() {
-  pinBuffer = pinBuffer.slice(0, -1);
-  updateDots();
-  document.getElementById('pin-error').textContent = '';
-}
-
-function updateDots() {
-  for (let i = 0; i < 4; i++) {
-    document.getElementById('pd' + i).classList.toggle('filled', i < pinBuffer.length);
-  }
-}
-
-function handlePinComplete() {
-  if (pinSetupMode) {
-    if (!pinSetupFirst) {
-      // First entry — ask to confirm
-      pinSetupFirst = pinBuffer;
-      pinBuffer = '';
-      updateDots();
-      document.getElementById('lock-sub').textContent = 'PIN wiederholen zur Bestätigung';
-      document.getElementById('pin-error').textContent = '';
-    } else {
-      // Second entry — compare
-      if (pinBuffer === pinSetupFirst) {
-        localStorage.setItem(PIN_KEY, btoa(pinBuffer));
-        pinSetupMode = false;
-        pinSetupFirst = '';
-        // Try to register biometric after PIN setup
-        tryRegisterBiometric();
-        unlock();
-      } else {
-        document.getElementById('pin-error').textContent = '❌ PINs stimmen nicht überein — nochmal';
-        pinSetupFirst = '';
-        pinBuffer = '';
-        updateDots();
-        document.getElementById('lock-sub').textContent = 'Neuen PIN wählen (4 Stellen)';
-      }
-    }
-  } else {
-    // Normal unlock attempt
-    const storedPin = localStorage.getItem(PIN_KEY);
-    if (storedPin && atob(storedPin) === pinBuffer) {
-      unlock();
-    } else {
-      document.getElementById('pin-error').textContent = '❌ Falscher PIN — bitte erneut versuchen';
-      pinBuffer = '';
-      updateDots();
-      // Shake animation
-      const dots = document.getElementById('pin-dots');
-      dots.style.animation = 'none';
-      dots.offsetHeight; // reflow
-      dots.style.animation = 'shake .3s ease';
-    }
-  }
-}
-
-function unlock() {
-  sessionStorage.setItem(SESSION_KEY, '1');
-  hideLockScreen();
-}
-
-function hideLockScreen() {
-  const ls = document.getElementById('lock-screen');
-  ls.style.transition = 'opacity .3s';
-  ls.style.opacity = '0';
-  setTimeout(() => ls.style.display = 'none', 320);
-}
-
-// ── Biometric (Face ID / Touch ID via WebAuthn) ──────────
-let biometricAvailable = false;
-
-async function checkBiometric() {
-  try {
-    if (!window.PublicKeyCredential) return false;
-    const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-    return available;
-  } catch { return false; }
-}
-
-async function updateBioBtn() {
-  biometricAvailable = await checkBiometric();
-  const btn = document.getElementById('bio-btn');
-  if (biometricAvailable) {
-    btn.textContent = '⬡'; // will be replaced
-    // Detect Face ID vs Touch ID heuristically
-    const ua = navigator.userAgent;
-    const isIpad = /iPad/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    btn.textContent = isIpad ? '👤' : '⬡';
-    btn.title = 'Face ID / Touch ID';
-    btn.style.opacity = '1';
-  } else {
-    btn.style.opacity = '0.3';
-    btn.title = 'Biometrie nicht verfügbar';
-  }
-}
-
-async function tryBiometric() {
-  const storedPin = localStorage.getItem(PIN_KEY);
-  if (!storedPin) return; // Kein PIN gesetzt, Biometrie sinnlos
-  if (!biometricAvailable) return;
-
-  const credId = localStorage.getItem('heb_cred_id');
-  if (!credId) {
-    // Kein Credential registriert — PIN verwenden
-    return;
-  }
-
-  try {
-    const challenge = new Uint8Array(32);
-    crypto.getRandomValues(challenge);
-    const assertion = await navigator.credentials.get({
-      publicKey: {
-        challenge,
-        allowCredentials: [{
-          id: Uint8Array.from(atob(credId), c => c.charCodeAt(0)),
-          type: 'public-key'
-        }],
-        userVerification: 'required',
-        timeout: 30000
-      }
-    });
-    if (assertion) unlock();
-  } catch (e) {
-    // User cancelled or failed — fall back to PIN silently
-    console.log('Biometric failed, use PIN:', e.name);
-  }
-}
-
-async function tryRegisterBiometric() {
-  if (!biometricAvailable) return;
-  try {
-    const challenge = new Uint8Array(32);
-    crypto.getRandomValues(challenge);
-    const userId = new Uint8Array(16);
-    crypto.getRandomValues(userId);
-    const cred = await navigator.credentials.create({
-      publicKey: {
-        challenge,
-        rp: { name: 'Hebriden Planer', id: location.hostname },
-        user: { id: userId, name: 'reisende', displayName: 'Achim & Katja' },
-        pubKeyCredParams: [{ alg: -7, type: 'public-key' }],
-        authenticatorSelection: {
-          authenticatorAttachment: 'platform',
-          userVerification: 'required'
-        },
-        timeout: 30000
-      }
-    });
-    if (cred) {
-      const idB64 = btoa(String.fromCharCode(...new Uint8Array(cred.rawId)));
-      localStorage.setItem('heb_cred_id', idB64);
-      toast('✓ Face ID / Touch ID aktiviert!', 'var(--green2)');
-    }
-  } catch (e) {
-    console.log('Biometric registration skipped:', e.name);
-  }
-}
-
-// Shake animation
-const shakeStyle = document.createElement('style');
-shakeStyle.textContent = '@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}';
-document.head.appendChild(shakeStyle);
-
-// PIN ändern (aufrufbar aus Settings falls gewünscht)
-function changePin() {
-  localStorage.removeItem(PIN_KEY);
-  localStorage.removeItem('heb_cred_id');
-  sessionStorage.removeItem(SESSION_KEY);
-  location.reload();
-}
-
-
-// ═══════════════════════════════════════════
-// PDF KI-ANALYSE (IMP-02)
-// ═══════════════════════════════════════════
-let pdfAnalyseResult = null;
-
-function openPdfAnalyse() {
-  // Reset alle Schritte
-  ['pdf-step-upload','pdf-step-loading','pdf-step-result','pdf-step-error'].forEach(id=>{
-    document.getElementById(id).style.display = id==='pdf-step-upload'?'block':'none';
-  });
-  pdfAnalyseResult = null;
-  document.getElementById('pdf-modal').style.display = 'flex';
-}
-
-function closePdfModal(e) {
-  if(e.target === document.getElementById('pdf-modal'))
-    document.getElementById('pdf-modal').style.display = 'none';
-}
-
-function triggerPdfUpload() {
-  const inp = document.createElement('input');
-  inp.type = 'file';
-  inp.accept = 'application/pdf';
-  inp.style.cssText = 'position:fixed;top:-200px;left:-200px;opacity:0;width:1px;height:1px';
-  inp.onchange = function() {
-    const file = inp.files[0];
-    if(!file) { document.body.removeChild(inp); return; }
-    if(file.size > 3.5*1024*1024) {
-      toast('⚠️ PDF zu groß (max 3,5 MB)', 'var(--red)');
-      document.body.removeChild(inp); return;
-    }
-    const reader = new FileReader();
-    reader.onload = async function() {
-      document.body.removeChild(inp);
-      const base64 = reader.result.split(',')[1];
-      await analysePdfWithAI(base64, file.name);
-    };
-    reader.readAsDataURL(file);
-  };
-  document.body.appendChild(inp);
-  inp.click();
-}
-
-async function analysePdfWithAI(base64Data, fileName) {
-  // Zeige Lade-Screen
-  document.getElementById('pdf-step-upload').style.display = 'none';
-  document.getElementById('pdf-step-loading').style.display = 'block';
-
-  // Baue Reisekontext für KI
-  const dayIds = DAYS_DEFAULT.map(d=>`${d.id}=${d.date} (${d.from}→${d.to})`).join(', ');
-
-  const systemPrompt = `Du bist Reiseplaner-Assistent für Achim & Katjas Wohnmobiltour auf die Äußeren Hebriden 2026.
-Reisezeitraum: 18.06.–10.07.2026. Tagesetappen: ${dayIds}.
-Analysiere das Buchungsdokument und extrahiere alle relevanten Reisedaten.
-Antworte NUR mit einem validen JSON-Objekt, ohne Markdown-Backticks, ohne Erklärung.`;
-
-  const userPrompt = `Analysiere dieses Buchungsdokument für unsere Schottland/Hebriden-Reise.
-Extrahiere alle relevanten Daten und erstelle einen Vorschlag.
-
-Antworte AUSSCHLIESSLICH mit diesem JSON (keine anderen Zeichen):
-{
-  "name": "Name der Unterkunft, Restaurant oder Aktivität",
-  "date": "Datum oder Zeitraum (z.B. 22.06. oder 22–25.06.)",
-  "type": "camp|food|shop|sight|dispose|ferry|other",
-  "ref": "Buchungsreferenz oder Bestätigungsnummer",
-  "note": "Wichtige Details: Check-in Zeit, Adresse, Besonderheiten, Telefon",
-  "url": "Website falls erkennbar, sonst leer",
-  "dayId": "Passende Tagesetappen-ID aus der Liste (z.B. d04), leer wenn unklar",
-  "routing": "Routing-Hinweis: Passt diese Buchung in den Reiseablauf? Gibt es Zeitkonflikte mit Fähren? Empfehlungen für den Tag? (2–3 Sätze auf Deutsch)",
-  "bookingEntry": {
-    "date": "Datum für Buchungsliste",
-    "name": "Kurzbeschreibung für Buchungsliste",
-    "ref": "Referenznummer",
-    "url": "Website"
-  }
-}`;
-
-  try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        messages: [{
-          role: 'user',
-          content: [
-            {
-              type: 'document',
-              source: { type: 'base64', media_type: 'application/pdf', data: base64Data }
-            },
-            { type: 'text', text: userPrompt }
-          ]
-        }],
-        system: systemPrompt
-      })
-    });
-
-    const data = await response.json();
-    const rawText = data.content?.map(c=>c.text||'').join('').trim();
-
-    if(!rawText) throw new Error('Keine Antwort von KI');
-
-    // JSON parsen (ggf. Backticks entfernen)
-    const clean = rawText.replace(/```json|```/g,'').trim();
-    const result = JSON.parse(clean);
-
-    pdfAnalyseResult = result;
-    showPdfResult(result, fileName);
-
-  } catch(err) {
-    document.getElementById('pdf-step-loading').style.display = 'none';
-    const errEl = document.getElementById('pdf-step-error');
-    errEl.style.display = 'block';
-    errEl.innerHTML = `⚠️ Analyse fehlgeschlagen<br><small style="color:var(--txt3)">${esc(err.message)}</small><br><br>
-      <button onclick="openPdfAnalyse()" style="background:var(--brown);border:none;color:#fff;border-radius:8px;padding:8px 16px;font-size:12px;cursor:pointer;font-family:inherit">Nochmal versuchen</button>`;
-  }
-}
-
-function showPdfResult(r, fileName) {
-  document.getElementById('pdf-step-loading').style.display = 'none';
-
-  // Typ-Label
-  const TYPE_LABELS_PDF = {camp:'🏕️ Übernachtung',food:'🍽️ Restaurant',shop:'🛒 Einkauf',
-    sight:'🏰 Sehenswürdigkeit',dispose:'💧 Entsorgung',ferry:'⛴️ Fähre',other:'📍 Sonstiges'};
-
-  document.getElementById('pdf-r-name').textContent = r.name || '';
-  document.getElementById('pdf-r-date').textContent = r.date || '';
-  document.getElementById('pdf-r-type').textContent = TYPE_LABELS_PDF[r.type] || r.type || '📍 Sonstiges';
-  document.getElementById('pdf-r-ref').textContent = r.ref || '';
-  document.getElementById('pdf-r-note').textContent = r.note || '';
-
-  const routingBox = document.getElementById('pdf-r-routing');
-  if(r.routing) {
-    routingBox.style.display = 'block';
-    routingBox.innerHTML = '🗺️ <strong>Routing-Hinweis:</strong><br>' + esc(r.routing);
-  } else {
-    routingBox.style.display = 'none';
-  }
-
-  document.getElementById('pdf-step-result').style.display = 'block';
-}
-
-function getPdfFieldValues() {
-  return {
-    name: document.getElementById('pdf-r-name').textContent.trim(),
-    date: document.getElementById('pdf-r-date').textContent.trim(),
-    ref: document.getElementById('pdf-r-ref').textContent.trim(),
-    note: document.getElementById('pdf-r-note').textContent.trim(),
-  };
-}
-
-function adoptPdfProgram() {
-  if(!pdfAnalyseResult) return;
-  const v = getPdfFieldValues();
-  const r = pdfAnalyseResult;
-
-  // Finde passende Tagesetappe
-  const dayId = r.dayId || (DAYS_DEFAULT[0]?.id);
-  if(!customEntries[dayId]) customEntries[dayId] = [];
-
-  const TYPE_ICONS_PDF = {camp:'🏕️',food:'🍽️',shop:'🛒',sight:'🏰',dispose:'💧',ferry:'⛴️',other:'📍'};
-  const TYPE_LABELS_MAP = {camp:'Übernachtung',food:'Restaurant',shop:'Einkauf',sight:'Sehenswürdigkeit',dispose:'Entsorgung',ferry:'Fähre',other:'Sonstiges'};
-
-  customEntries[dayId].push({
-    id: 'c_'+Date.now(),
-    type: r.type||'other',
-    icon: TYPE_ICONS_PDF[r.type]||'📍',
-    typeLabel: TYPE_LABELS_MAP[r.type]||'Sonstiges',
-    name: v.name,
-    date: v.date,
-    url: r.url||'',
-    note: v.note + (v.ref ? ' · Ref: '+v.ref : ''),
-    routing: r.routing||''
-  });
-
-  save();
-  renderDays();
-  document.getElementById('pdf-modal').style.display = 'none';
-  toast('✓ Programmpunkt übernommen!', 'var(--green2)');
-}
-
-function adoptPdfBooking() {
-  if(!pdfAnalyseResult) return;
-  const v = getPdfFieldValues();
-  const r = pdfAnalyseResult;
-  const be = r.bookingEntry || {};
-
-  bookings.push({
-    id: 'b_'+Date.now(),
-    date: be.date||v.date,
-    sortDate: '',
-    name: be.name||v.name,
-    ref: be.ref||v.ref,
-    url: be.url||r.url||'',
-    cancelled: false
-  });
-
-  save();
-  renderBookings();
-  document.getElementById('pdf-modal').style.display = 'none';
-  toast('✓ Buchung hinzugefügt!', 'var(--brown)');
-}
-
-function adoptPdfBoth() {
-  if(!pdfAnalyseResult) return;
-  adoptPdfProgram();
-  // Re-show modal briefly to also adopt booking
-  adoptPdfBookingDirect();
-  toast('✓ Programmpunkt + Buchung übernommen!', 'var(--green2)');
-}
-
-function adoptPdfBookingDirect() {
-  if(!pdfAnalyseResult) return;
-  const v = getPdfFieldValues();
-  const r = pdfAnalyseResult;
-  const be = r.bookingEntry || {};
-  bookings.push({
-    id: 'b_'+Date.now(),
-    date: be.date||v.date,
-    sortDate: '',
-    name: be.name||v.name,
-    ref: be.ref||v.ref,
-    url: be.url||r.url||'',
-    cancelled: false
-  });
-  save();
-  renderBookings();
-}
-
-// Init
-document.addEventListener('DOMContentLoaded', initLock);
 
 </script>
 </body>
