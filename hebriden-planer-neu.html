@@ -716,7 +716,10 @@ const BOOKINGS_DEFAULT=[
   {id:'b8',date:'08.07.',sortDate:'2026-07-08',name:'DFDS Newcastle→Amsterdam',ref:'24872391',url:'https://www.dfds.com',cancelled:false},
 ];
 
-// ═══ STATE ══════════════════════════════════════
+// ═══ API KEY ═════════════════════════════════════
+const ANTHROPIC_API_KEY = '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';
+
+/ ═══ STATE ══════════════════════════════════════
 let bookings=JSON.parse(localStorage.getItem('heb_b3')||JSON.stringify(BOOKINGS_DEFAULT));
 let customEntries=JSON.parse(localStorage.getItem('heb_ce3')||'{}');
 let clChecked=JSON.parse(localStorage.getItem('heb_cl')||'{}');
@@ -1128,7 +1131,7 @@ Datum: ${date||'?'}, Von: ${from}, Nach: ${to}, km: ${km||'?'}, Notizen: ${notes
 
 Prüfe auf Deutsch (max 4 Sätze): 1) Passt ins Datum? 2) Route logisch? 3) Konflikte mit Fähren/Buchungen? 4) km realistisch? 5) Buchungsbedarf?`;
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:400,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true','x-api-key':ANTHROPIC_API_KEY},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:400,messages:[{role:'user',content:prompt}]})});
     const d=await r.json();
     const txt=d.content?.[0]?.text||'Keine Antwort.';
     box.innerHTML='🤖 <strong>KI-Prüfung:</strong><br>'+esc(txt).replace(/\n/g,'<br>');
@@ -1432,7 +1435,7 @@ async function sendGapMsg(){
   const loadDiv=appendMsg('🤖 Denke nach...','ai loading');
   try{
     const msgs=gapChatHistory.map(m=>({role:m.role,content:m.content}));
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:700,system:TRIP_CTX,messages})});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true','x-api-key':ANTHROPIC_API_KEY},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:700,system:TRIP_CTX,messages})});
     const d=await r.json();
     let txt=d.content&&d.content[0]&&d.content[0].text?d.content[0].text:'Keine Antwort.';
     gapChatHistory.push({role:'assistant',content:txt});
@@ -1932,7 +1935,8 @@ Antworte AUSSCHLIESSLICH mit diesem JSON (keine anderen Zeichen):
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'anthropic-dangerous-direct-browser-access': 'true',
+        'x-api-key': ANTHROPIC_API_KEY
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
