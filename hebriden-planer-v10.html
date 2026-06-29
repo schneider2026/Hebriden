@@ -1133,7 +1133,23 @@ function renderAttachments(key){
   return html;
 }
 function attBtn(key,label){
-  return '<button onclick="triggerUpload('+JSON.stringify(key)+')" style="background:transparent;border:1px dashed #aabbd0;color:#1a4a7a;border-radius:7px;padding:4px 9px;font-size:11px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:4px">📎 '+(label||'Beleg anhängen')+'</button>';
+  const uid='fu_'+Math.random().toString(36).slice(2);
+  const k=JSON.stringify(key);
+  return '<label style="background:transparent;border:1px dashed #aabbd0;color:#1a4a7a;border-radius:7px;padding:4px 9px;font-size:11px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:4px" for="'+uid+'">📎 '+(label||'Beleg anhängen')+'<input id="'+uid+'" type="file" accept="application/pdf,image/*" style="display:none" onchange="handleAttachInput(this,'+k+')"></label>';
+}
+
+function handleAttachInput(inp,key){
+  const file=inp.files[0];
+  if(!file)return;
+  if(file.size>3.5*1024*1024){toast('⚠️ Datei zu groß (max 3,5 MB)','var(--red)');return;}
+  const reader=new FileReader();
+  reader.onload=function(){
+    if(!attachments[key])attachments[key]=[];
+    attachments[key].push({name:file.name,data:reader.result,type:file.type});
+    save();renderDays();renderBookings();
+    toast('📎 '+file.name+' angehängt','var(--green2)');
+  };
+  reader.readAsDataURL(file);
 }
 
 function renderBookings(){
