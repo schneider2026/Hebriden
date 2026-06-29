@@ -306,13 +306,24 @@ a.bl{color:var(--blue2);font-size:10px;text-decoration:none}a.bl:hover{text-deco
 .btn-confirm-no{flex:1;background:transparent;border:1px solid var(--sand3);color:var(--txt2);border-radius:8px;padding:10px;font-size:13px;cursor:pointer;font-family:inherit}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--brown);color:#fff;padding:9px 18px;border-radius:22px;font-size:12px;font-weight:600;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1}
+/* ═══ PDF KI-ANALYSE ════════════════════════════════════ */
+.pdf-analyse-btn{background:linear-gradient(135deg,#1a4a7a,#2563a8);border:none;color:#fff;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;margin-left:8px}
+.pdf-preview-card{background:linear-gradient(135deg,#eef6ff,#f0f8ee);border:1px solid #b0d0f0;border-radius:12px;padding:14px;margin-bottom:12px}
+.pdf-preview-title{font-size:14px;font-weight:700;color:var(--brown);margin-bottom:10px}
+.pdf-field{margin-bottom:8px}
+.pdf-field label{display:block;font-size:10px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.pdf-field .val{font-size:13px;color:var(--txt);background:var(--white);border-radius:6px;padding:6px 9px;border:1px solid var(--sand3)}
+.pdf-routing-box{background:#fff8e8;border:1px solid #e8d090;border-radius:8px;padding:9px 12px;font-size:12px;color:#5a4000;line-height:1.6;margin-bottom:10px}
+.pdf-loading{display:flex;flex-direction:column;align-items:center;gap:10px;padding:24px;color:var(--txt3);font-size:13px}
+.pdf-spinner{width:32px;height:32px;border:3px solid var(--sand3);border-top-color:var(--brown);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn-adopt-both{width:100%;background:linear-gradient(135deg,var(--green2),var(--brown2));border:none;color:#fff;border-radius:9px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:6px}
+.btn-adopt-prog{flex:1;background:var(--green2);border:none;color:#fff;border-radius:9px;padding:11px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-adopt-book{flex:1;background:var(--brown);border:none;color:#fff;border-radius:9px;padding:11px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
 
 </style>
 </head>
 <body>
-
-
-
 <div class="hdr">
   <div class="hdr-row">
     <div><h1>🚐 Hebriden 2026</h1><div class="meta">Achim &amp; Katja · 8,30 m · 18.06.–10.07.</div></div>
@@ -365,7 +376,7 @@ a.bl{color:var(--blue2);font-size:10px;text-decoration:none}a.bl:hover{text-deco
 <!-- BUCHUNGEN -->
 <div class="content tab-panel" id="tab-buchungen">
   <div class="bsec">
-    <div class="bhdr">✅ Bestätigt &amp; bezahlt <button class="btn-add-booking" onclick="openBookingModal(null)">＋ Hinzufügen</button><button class="pdf-analyse-btn" onclick="openPdfAnalyse()">🤖 PDF analysieren</button></div>
+    <div class="bhdr">✅ Bestätigt &amp; bezahlt <button class="pdf-analyse-btn" onclick="openPdfAnalyse()">🤖 PDF analysieren</button><button class="btn-add-booking" onclick="openBookingModal(null)">＋ Hinzufügen</button></div>
     <div class="sort-row">Sortierung:
       <button class="sort-btn active" id="sort-date-btn" onclick="setSortMode('date')">📅 Datum</button>
       <button class="sort-btn" id="sort-name-btn" onclick="setSortMode('name')">🔤 Name</button>
@@ -437,54 +448,40 @@ a.bl{color:var(--blue2);font-size:10px;text-decoration:none}a.bl:hover{text-deco
 </div>
 
 <!-- ADD STOP MODAL -->
-
 <!-- ═══ PDF ANALYSE MODAL ════════════════════════════════ -->
-<div class="modal-overlay" id="pdf-modal" style="display:none" onclick="closePdfModal(event)">
+<div class="modal-overlay" id="pdf-modal" style="display:none" onclick="if(event.target===this)this.style.display='none'">
   <div class="modal">
     <div class="modal-title">
       <span>🤖 Buchungsdokument analysieren</span>
       <button class="modal-close" onclick="document.getElementById('pdf-modal').style.display='none'">×</button>
     </div>
-    <div id="pdf-modal-body">
-      <div id="pdf-step-upload">
-        <div style="font-size:12px;color:var(--txt2);margin-bottom:14px;line-height:1.6">
-          Lade ein Buchungsdokument (PDF) hoch. Die KI liest Datum, Ort und Details heraus und schlägt einen Programmpunkt sowie Routing-Hinweis vor.
-        </div>
-        <div style="border:2px dashed var(--brown3);border-radius:12px;padding:24px;text-align:center;cursor:pointer;background:var(--sand)" onclick="triggerPdfUpload()">
-          <div style="font-size:32px;margin-bottom:8px">📄</div>
-          <div style="font-size:13px;font-weight:600;color:var(--brown)">PDF hier tippen zum Hochladen</div>
-          <div style="font-size:11px;color:var(--txt3);margin-top:4px">max. 3,5 MB</div>
-        </div>
-        <div style="font-size:11px;color:var(--txt3);margin-top:10px;text-align:center">
-          Das Dokument wird nur für diese Analyse an Claude gesendet und nicht gespeichert.
-        </div>
+    <div id="pdf-step-upload">
+      <div style="font-size:12px;color:var(--txt2);margin-bottom:14px;line-height:1.6">PDF hochladen — KI liest Datum, Ort und Details heraus und schlägt einen Programmpunkt vor.</div>
+      <div style="border:2px dashed var(--brown3);border-radius:12px;padding:24px;text-align:center;cursor:pointer;background:var(--sand)" onclick="triggerPdfUpload()">
+        <div style="font-size:32px;margin-bottom:8px">📄</div>
+        <div style="font-size:13px;font-weight:600;color:var(--brown)">PDF tippen zum Hochladen</div>
+        <div style="font-size:11px;color:var(--txt3);margin-top:4px">max. 3,5 MB</div>
       </div>
-      <div id="pdf-step-loading" style="display:none">
-        <div class="pdf-loading">
-          <div class="pdf-spinner"></div>
-          <div>KI liest das Dokument&#8230;</div>
-          <div style="font-size:11px;color:var(--txt3)">Dauert ca. 5&#8211;10 Sekunden</div>
-        </div>
-      </div>
-      <div id="pdf-step-result" style="display:none">
-        <div class="pdf-preview-card">
-          <div class="pdf-preview-title">&#10024; KI-Vorschlag</div>
-          <div class="pdf-field"><label>Name / Beschreibung</label><div class="val editable" id="pdf-r-name" contenteditable="true"></div></div>
-          <div class="pdf-field"><label>Datum</label><div class="val editable" id="pdf-r-date" contenteditable="true"></div></div>
-          <div class="pdf-field"><label>Typ</label><div class="val" id="pdf-r-type"></div></div>
-          <div class="pdf-field"><label>Buchungsreferenz</label><div class="val editable" id="pdf-r-ref" contenteditable="true"></div></div>
-          <div class="pdf-field"><label>Notiz</label><div class="val editable" id="pdf-r-note" contenteditable="true"></div></div>
-        </div>
-        <div class="pdf-routing-box" id="pdf-r-routing" style="display:none"></div>
-        <button class="btn-adopt-both" onclick="adoptPdfBoth()">&#10003; Alles übernehmen (Programmpunkt + Buchung)</button>
-        <div class="pdf-action-row">
-          <button class="btn-adopt-prog" onclick="adoptPdfProgram()">&#128205; Nur Programmpunkt</button>
-          <button class="btn-adopt-book" onclick="adoptPdfBooking()">&#128203; Nur Buchung</button>
-        </div>
-        <button class="btn-secondary-modal" style="margin-top:8px" onclick="document.getElementById('pdf-modal').style.display='none'">Abbrechen</button>
-      </div>
-      <div id="pdf-step-error" style="display:none;padding:16px;text-align:center;color:var(--red);font-size:13px"></div>
     </div>
+    <div id="pdf-step-loading" style="display:none"><div class="pdf-loading"><div class="pdf-spinner"></div><div>KI analysiert&#8230;</div></div></div>
+    <div id="pdf-step-result" style="display:none">
+      <div class="pdf-preview-card">
+        <div class="pdf-preview-title">✨ KI-Vorschlag</div>
+        <div class="pdf-field"><label>Name</label><div class="val" id="pdf-r-name" contenteditable="true"></div></div>
+        <div class="pdf-field"><label>Datum</label><div class="val" id="pdf-r-date" contenteditable="true"></div></div>
+        <div class="pdf-field"><label>Typ</label><div class="val" id="pdf-r-type"></div></div>
+        <div class="pdf-field"><label>Referenz</label><div class="val" id="pdf-r-ref" contenteditable="true"></div></div>
+        <div class="pdf-field"><label>Notiz</label><div class="val" id="pdf-r-note" contenteditable="true"></div></div>
+      </div>
+      <div class="pdf-routing-box" id="pdf-r-routing" style="display:none"></div>
+      <button class="btn-adopt-both" onclick="adoptPdfBoth()">✓ Alles übernehmen</button>
+      <div style="display:flex;gap:8px">
+        <button class="btn-adopt-prog" onclick="adoptPdfProgram()">📍 Nur Programmpunkt</button>
+        <button class="btn-adopt-book" onclick="adoptPdfBooking()">📋 Nur Buchung</button>
+      </div>
+      <button class="btn-secondary-modal" style="margin-top:8px" onclick="document.getElementById('pdf-modal').style.display='none'">Abbrechen</button>
+    </div>
+    <div id="pdf-step-error" style="display:none;padding:16px;text-align:center;color:var(--red);font-size:13px"></div>
   </div>
 </div>
 
@@ -652,10 +649,7 @@ const BOOKINGS_DEFAULT=[
   {id:'b8',date:'08.07.',sortDate:'2026-07-08',name:'DFDS Newcastle→Amsterdam',ref:'24872391',url:'https://www.dfds.com',cancelled:false},
 ];
 
-// ═══ API KEY ═════════════════════════════════════
-const ANTHROPIC_API_KEY = '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';
-
-/ ═══ STATE ══════════════════════════════════════
+// ═══ STATE ══════════════════════════════════════
 let bookings=JSON.parse(localStorage.getItem('heb_b3')||JSON.stringify(BOOKINGS_DEFAULT));
 let customEntries=JSON.parse(localStorage.getItem('heb_ce3')||'{}');
 let clChecked=JSON.parse(localStorage.getItem('heb_cl')||'{}');
@@ -757,14 +751,59 @@ function toast(msg,col){
   t.textContent=msg;t.style.background=col||'var(--brown)';
   t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);
 }
-function closeModal(id){
-  document.getElementById(id).style.display='none';
-  if(id==='add-modal'){
-    const btn=document.getElementById('modal-confirm-btn');
-    if(btn){btn.textContent='✓ Übernehmen';btn.onclick=confirmAddEntry;}
-    window._editDayId=null;window._editEntryId=null;
-  }
+function openEditModal(dayId,entryId){
+  const entries=customEntries[dayId]||[];
+  const e=entries.find(x=>x.id===entryId);
+  if(!e)return;
+  window._editDayId=dayId;
+  window._editEntryId=entryId;
+  document.getElementById('modal-etappe-label').textContent='Eintrag bearbeiten';
+  document.getElementById('m-name').value=e.name||'';
+  document.getElementById('m-date').value=e.date||'';
+  document.getElementById('m-url').value=e.url||'';
+  document.getElementById('m-note').value=e.note||'';
+  document.getElementById('m-routing').value=e.routing||'';
+  document.getElementById('routing-result').style.display='none';
+  currentType=e.type||'other';
+  document.querySelectorAll('.type-btn').forEach(b=>{
+    const t=b.getAttribute('onclick')||'';
+    const m=t.match(/selectType\(this,'(\w+)'\)/);
+    if(m)b.classList.toggle('selected',m[1]===currentType);
+  });
+  const btn=document.getElementById('modal-confirm-btn');
+  if(btn){btn.textContent='✓ Änderungen speichern';btn.onclick=saveEditEntry;}
+  document.getElementById('add-modal').style.display='flex';
 }
+
+function saveEditEntry(){
+  const dayId=window._editDayId;
+  const entryId=window._editEntryId;
+  if(!dayId||!entryId)return;
+  const entries=customEntries[dayId]||[];
+  const idx=entries.findIndex(x=>x.id===entryId);
+  if(idx<0)return;
+  const name=document.getElementById('m-name').value.trim();
+  if(!name){toast('Bitte Name eingeben');return;}
+  const TYPE_ICONS_E={camp:'🏕️',food:'🍽️',shop:'🛒',sight:'🏰',dispose:'💧',ferry:'⛴️',other:'📍'};
+  const TYPE_LABELS_E={camp:'Übernachtung',food:'Restaurant',shop:'Einkauf',sight:'Sehenswürdigkeit',dispose:'Entsorgung',ferry:'Fähre',other:'Sonstiges'};
+  entries[idx]={...entries[idx],
+    type:currentType,icon:TYPE_ICONS_E[currentType]||'📍',
+    typeLabel:TYPE_LABELS_E[currentType]||'Sonstiges',
+    name,date:document.getElementById('m-date').value.trim(),
+    url:document.getElementById('m-url').value.trim(),
+    note:document.getElementById('m-note').value.trim(),
+    routing:document.getElementById('m-routing').value.trim()
+  };
+  customEntries[dayId]=entries;
+  save();renderDays();
+  const btn=document.getElementById('modal-confirm-btn');
+  if(btn){btn.textContent='✓ Übernehmen';btn.onclick=confirmAddEntry;}
+  window._editDayId=null;window._editEntryId=null;
+  closeModal('add-modal');
+  toast('✓ Eintrag aktualisiert','var(--green2)');
+}
+
+function closeModal(id){document.getElementById(id).style.display='none';}
 function closeConfirm(){document.getElementById('confirm-overlay').style.display='none';}
 
 // ═══ MAP ═════════════════════════════════════════
@@ -893,7 +932,7 @@ function buildStopsHtml(day){
           <div class="smeta">${e.date?'📅 '+esc(e.date)+'  ':''}${esc(e.note||'')}</div>
           ${e.url?`<div class="smeta"><a href="${esc(e.url)}" target="_blank" style="color:var(--blue2)">${esc(e.url.replace('https://',''))}</a></div>`:''}
           <div class="stags"><span class="stag custom">${esc(e.typeLabel)}</span></div>
-          <div class="act-row"><button onclick="deleteCustomEntry('${day.id}','${e.id}')" style="background:#f8d0d0;border:1px solid #e08080;color:var(--red);border-radius:6px;padding:3px 9px;font-size:11px;cursor:pointer;font-family:inherit">× Entfernen</button> <button onclick="openEditModal('${day.id}','${e.id}')" style="background:#d4e8f8;border:1px solid #90b8d8;color:var(--blue);border-radius:6px;padding:3px 9px;font-size:11px;cursor:pointer;font-family:inherit">✏️ Bearbeiten</button></div>
+          <div class="act-row"><button onclick="deleteCustomEntry('${day.id}','${e.id}')" style="background:#f8d0d0;border:1px solid #e08080;color:var(--red);border-radius:6px;padding:3px 9px;font-size:11px;cursor:pointer;font-family:inherit">× Entfernen</button> <button onclick="openEditModal('${day.id}','${e.id}')" style="background:#d4e8f8;border:1px solid #90b8d8;color:#1a4a7a;border-radius:6px;padding:3px 9px;font-size:11px;cursor:pointer;font-family:inherit">✏️ Bearbeiten</button></div>
         </div></div>`;
     });
   }
@@ -967,60 +1006,6 @@ function confirmAddEntry(){
 }
 function deleteCustomEntry(dayId,id){if(!customEntries[dayId])return;customEntries[dayId]=customEntries[dayId].filter(e=>e.id!==id);save();renderDays();toast('Eintrag entfernt');}
 
-function openEditModal(dayId,entryId){
-  const entries=customEntries[dayId]||[];
-  const e=entries.find(x=>x.id===entryId);
-  if(!e)return;
-  window._editDayId=dayId;
-  window._editEntryId=entryId;
-  // Reuse add modal, prefill
-  document.getElementById('modal-etappe-label').textContent='Eintrag bearbeiten';
-  document.getElementById('m-name').value=e.name||'';
-  document.getElementById('m-date').value=e.date||'';
-  document.getElementById('m-url').value=e.url||'';
-  document.getElementById('m-note').value=e.note||'';
-  document.getElementById('m-routing').value=e.routing||'';
-  document.getElementById('routing-result').style.display='none';
-  // Select correct type button
-  document.querySelectorAll('.type-btn').forEach(b=>{
-    const t=b.getAttribute('data-type')||b.onclick?.toString().match(/selectType\(this,'(\w+)'\)/)?.[1];
-    b.classList.toggle('selected', t===e.type);
-  });
-  currentType=e.type||'other';
-  // Change confirm button to save edit
-  const confirmBtn=document.getElementById('modal-confirm-btn');
-  if(confirmBtn){confirmBtn.textContent='✓ Änderungen speichern';confirmBtn.onclick=saveEditEntry;}
-  document.getElementById('add-modal').style.display='flex';
-}
-
-function saveEditEntry(){
-  const dayId=window._editDayId;
-  const entryId=window._editEntryId;
-  if(!dayId||!entryId)return;
-  const entries=customEntries[dayId]||[];
-  const idx=entries.findIndex(x=>x.id===entryId);
-  if(idx<0)return;
-  const name=document.getElementById('m-name').value.trim();
-  if(!name){toast('Bitte Name eingeben');return;}
-  entries[idx]={...entries[idx],
-    type:currentType,
-    icon:TYPE_ICONS[currentType]||'📍',
-    typeLabel:TYPE_LABELS[currentType]||'Sonstiges',
-    name,
-    date:document.getElementById('m-date').value.trim(),
-    url:document.getElementById('m-url').value.trim(),
-    note:document.getElementById('m-note').value.trim(),
-    routing:document.getElementById('m-routing').value.trim()
-  };
-  customEntries[dayId]=entries;
-  save();renderDays();closeModal('add-modal');
-  // Reset confirm button back to add mode
-  const confirmBtn=document.getElementById('modal-confirm-btn');
-  if(confirmBtn){confirmBtn.textContent='✓ Übernehmen';confirmBtn.onclick=confirmAddEntry;}
-  window._editDayId=null;window._editEntryId=null;
-  toast('✓ Eintrag aktualisiert','var(--green2)');
-}
-
 // ═══ ADD DAY ═════════════════════════════════════
 function openAddDayModal(){
   ['nd-date','nd-from','nd-to','nd-ref','nd-notes'].forEach(id=>document.getElementById(id).value='');
@@ -1067,7 +1052,7 @@ Datum: ${date||'?'}, Von: ${from}, Nach: ${to}, km: ${km||'?'}, Notizen: ${notes
 
 Prüfe auf Deutsch (max 4 Sätze): 1) Passt ins Datum? 2) Route logisch? 3) Konflikte mit Fähren/Buchungen? 4) km realistisch? 5) Buchungsbedarf?`;
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true','x-api-key':ANTHROPIC_API_KEY},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:400,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true','x-api-key':'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'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:400,messages:[{role:'user',content:prompt}]})});
     const d=await r.json();
     const txt=d.content?.[0]?.text||'Keine Antwort.';
     box.innerHTML='🤖 <strong>KI-Prüfung:</strong><br>'+esc(txt).replace(/\n/g,'<br>');
@@ -1089,13 +1074,12 @@ function triggerUpload(key){
   const inp=document.createElement('input');
   inp.type='file';
   inp.accept='application/pdf,image/*';
-  inp.style.cssText='position:fixed;top:-200px;left:-200px;opacity:0;width:1px;height:1px;pointer-events:none';
-  // iOS Safari Fix: append BEFORE click, use addEventListener with capture
+  inp.style.cssText='position:fixed;top:-100px;left:-100px;opacity:0;width:1px;height:1px';
   document.body.appendChild(inp);
-  inp.addEventListener('change', function(){
+  inp.addEventListener('change',function(){
     const file=inp.files[0];
     if(!file){if(inp.parentNode)document.body.removeChild(inp);return;}
-    if(file.size>3.5*1024*1024){toast('⚠️ Datei zu groß (max 3,5 MB)','var(--red)');if(inp.parentNode)document.body.removeChild(inp);return;}
+    if(file.size>3.5*1024*1024){toast('⚠️ Datei zu groß (max 3,5 MB)','var(--red)');document.body.removeChild(inp);return;}
     const reader=new FileReader();
     reader.onload=function(){
       if(!attachments[key])attachments[key]=[];
@@ -1103,41 +1087,31 @@ function triggerUpload(key){
       save();
       renderDays();renderBookings();
       toast('📎 '+file.name+' angehängt','var(--green2)');
-      if(inp.parentNode)document.body.removeChild(inp);
+      document.body.removeChild(inp);
     };
     reader.readAsDataURL(file);
-  }, {once:true});
+  };
+  },{once:true});
   inp.click();
 }
 function openAttachment(key,idx){
   const a=attachments[key]&&attachments[key][idx];
   if(!a)return;
-  // iOS Safari Fix: window.open() blocked — use object-URL + anchor click instead
-  try {
+  try{
     const byteStr=atob(a.data.split(',')[1]);
     const ab=new ArrayBuffer(byteStr.length);
     const ia=new Uint8Array(ab);
-    for(let i=0;i<byteStr.length;i++) ia[i]=byteStr.charCodeAt(i);
+    for(let i=0;i<byteStr.length;i++)ia[i]=byteStr.charCodeAt(i);
     const blob=new Blob([ab],{type:a.type});
     const url=URL.createObjectURL(blob);
     const link=document.createElement('a');
-    link.href=url;
-    link.target='_blank';
-    link.rel='noopener';
-    if(a.type==='application/pdf') link.type='application/pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    link.href=url;link.target='_blank';link.rel='noopener';
+    document.body.appendChild(link);link.click();document.body.removeChild(link);
     setTimeout(()=>URL.revokeObjectURL(url),10000);
-  } catch(err) {
-    // Fallback: direkte data URL
+  }catch(err){
     const link=document.createElement('a');
-    link.href=a.data;
-    link.target='_blank';
-    link.download=a.name;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    link.href=a.data;link.target='_blank';link.download=a.name;
+    document.body.appendChild(link);link.click();document.body.removeChild(link);
   }
 }
 function deleteAttachment(key,idx){
@@ -1235,7 +1209,7 @@ const TL=[
   {dot:'dok',card:'ok',ico:'🚐',cat:'drive',title:'Newcastle → Oban · Highfield Holidays',sub:'~400 km · Ankunft ~15:00',badge:'bok',bl:'✓ Gebucht',date:'21.06 So',times:[{label:'Ankunft Newcastle',val:'09:15'},{label:'Fahrzeit',val:'~5h45'},{label:'Ankunft Oban',val:'~15:00'},{label:'Highfield',val:'5km vor Oban'}],body:'A69→A74M→A85 · ~400 km bei 70 km/h = ~5h45 · Highfield Holidays Ref. 10703761 · £40 bei Ankunft · CalMac erst morgen 22.06. · entspannter Tag!'},
   {dot:'ds',card:'s',ico:'⛴️',cat:'ferry',title:'CalMac: Oban → Castlebay (Barra)',sub:'Check-in 12:25 · Abf. 13:10 · Ank. 17:55',badge:'bs',bl:'✓ Gebucht',date:'22.06 Mo',times:[{label:'Check-in',val:'12:25'},{label:'Abfahrt',val:'13:10'},{label:'Ankunft',val:'17:55'}],body:'2 Erwachsene, 1 Hund (Pax Lounge), 1 Wohnmobil · ✓'},
   {dot:'dok',card:'ok',ico:'🏝️',cat:'sleep',title:'Scurrival Campsite, Barra',sub:'4 Nächte',badge:'bok',bl:'✓ Bestätigt',date:'22–26.06',body:'£90 bar · Mel · ★★★★★'},
-  {dot:'ds',card:'s',ico:'⛴️',cat:'ferry',title:'CalMac: Ardmhor (Barra) → Eriskay',sub:'Check-in 09:05 · Abf. 09:25 · Ank. 10:05',badge:'bs',bl:'✓ Gebucht',date:'26.06 Fr',times:[{label:'Check-in',val:'09:05'},{label:'Abfahrt',val:'09:25'},{label:'Ankunft',val:'10:05'}],body:'Ref. <span class="ref">S2600148482</span> · 2 Erwachsene, 1 Hund (Pax Lounge), 1 Wohnmobil · ✓ bestätigt'},
+  {dot:'ds',card:'s',ico:'⛴️',cat:'ferry',title:'CalMac: Ardmhor (Barra) → Eriskay',sub:'Check-in 09:05 · Abf. 09:25 · Ank. 10:05',badge:'bs',bl:'✓ Gebucht',date:'26.06 Fr',body:'Ref. <span class="ref">S2600148482</span> · 2 Erw., 1 Hund, 1 Wohnmobil · ✓ bestätigt'},
   {dot:'dok',card:'ok',ico:'🏕️',cat:'sleep',title:'Clachan Sands, North Uist',sub:'1 Nacht · Pitch 01',badge:'bok',bl:'✓ Bestätigt',date:'26–27.06',body:'Ref. <span class="ref">10566568</span>'},
   {dot:'ds',card:'s',ico:'⛴️',cat:'ferry',title:'CalMac: Berneray → Leverburgh (Harris)',sub:'Check-in 09:10 · Abf. 09:30 · Ank. 10:30',badge:'bs',bl:'✓ Gebucht',date:'27.06 Sa',times:[{label:'Aufbruch',val:'08:20'},{label:'Check-in',val:'09:10'},{label:'Abfahrt',val:'09:30'},{label:'Ankunft',val:'10:30'}],body:'<div class="rnote2">⚠️ Frühstart! Horgabost 45 Min. vom Hafen → spätestens 08:20 aufbrechen</div>'},
   {dot:'dok',card:'ok',ico:'🏕️',cat:'sleep',title:'Horgabost Campsite, Harris',sub:'1 Nacht · Pitch 27',badge:'bok',bl:'✓ Bestätigt',date:'27–28.06',body:'Ref. <span class="ref">10591181</span> · £1-Münzen!'},
@@ -1311,13 +1285,14 @@ function renderTimeline(){
     c.appendChild(outer);
   });
 
-  // Also render accepted custom entries (BUG-01 Fix: use e.date as fallback if dayDef not found)
+  // Also render accepted custom entries (BUG-01 Fix: use e.date as fallback)
   Object.entries(customEntries).forEach(([dayId,entries])=>{
     entries.forEach(e=>{
       const dayDef=DAYS_DEFAULT.find(d=>d.id===dayId)||customDays.find(d=>d.id===dayId);
       const displayDate=dayDef?dayDef.date:(e.date||'');
+      const div=document.createElement('div');div.className='tlb';
       const outer2=document.createElement('div');outer2.className='tlb cat-added';
-      outer2.innerHTML=`<div class="tll"><div class="tl-cat-badge">📍</div><div class="tldot dc"></div><div class="tldate">${esc(displayDate)}</div></div><div class="tlcard cu"><div class="tlh"><span class="tlico">${e.icon||'📍'}</span><div style="flex:1;min-width:0"><div style="margin-bottom:3px"><span class="tl-cat-chip">📍 Eigener Fund</span></div><div class="tltitle">${esc(e.name)}</div><div class="tlsub">${esc(e.typeLabel||'')}${e.date?' · '+esc(e.date):''}</div></div><span class="bdg bcu">✓ Eingeplant</span></div><div class="tlbody">${esc(e.note||'')}${e.url?'<br><a href="'+esc(e.url)+'" target="_blank" style="color:var(--blue2);font-size:10px">'+esc(e.url.replace('https://',''))+'</a>':''}</div></div>`;
+      outer2.innerHTML=`<div class="tll"><div class="tl-cat-badge">📍</div><div class="tldot dc"></div><div class="tldate">${esc(displayDate)}</div></div><div class="tlcard cu"><div class="tlh"><span class="tlico">${e.icon}</span><div style="flex:1;min-width:0"><div style="margin-bottom:3px"><span class="tl-cat-chip">📍 Eigener Fund</span></div><div class="tltitle">${esc(e.name)}</div><div class="tlsub">${esc(e.typeLabel)}${e.date?' · '+esc(e.date):''}</div></div><span class="bdg bcu">✓ Eingeplant</span></div><div class="tlbody">${esc(e.note||'')}${e.url?'<br><a href="'+esc(e.url)+'" target="_blank" style="color:var(--blue2);font-size:10px">'+esc(e.url.replace('https://',''))+'</a>':''}</div></div>`;
       c.appendChild(outer2);
     });
   });
@@ -1371,7 +1346,7 @@ async function sendGapMsg(){
   const loadDiv=appendMsg('🤖 Denke nach...','ai loading');
   try{
     const msgs=gapChatHistory.map(m=>({role:m.role,content:m.content}));
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true','x-api-key':ANTHROPIC_API_KEY},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:700,system:TRIP_CTX,messages})});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true','x-api-key':'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'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:700,system:TRIP_CTX,messages})});
     const d=await r.json();
     let txt=d.content&&d.content[0]&&d.content[0].text?d.content[0].text:'Keine Antwort.';
     gapChatHistory.push({role:'assistant',content:txt});
@@ -1558,9 +1533,113 @@ renderDays();
 renderBookings();
 renderChecklist();
 setTimeout(()=>{if(document.getElementById('conflict-box'))renderConflicts();},100);
-
-
+// ═══ PDF KI-ANALYSE ═══════════════════════
+var pdfResult=null;
+var PDF_API_KEY='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';
+function openPdfAnalyse(){
+  ['pdf-step-upload','pdf-step-loading','pdf-step-result','pdf-step-error'].forEach(function(id){
+    document.getElementById(id).style.display=id==='pdf-step-upload'?'block':'none';
+  });
+  pdfResult=null;
+  document.getElementById('pdf-modal').style.display='flex';
+}
+function triggerPdfUpload(){
+  var inp=document.createElement('input');
+  inp.type='file';inp.accept='application/pdf';
+  inp.style.cssText='position:fixed;top:-200px;left:-200px;opacity:0;width:1px;height:1px;pointer-events:none';
+  document.body.appendChild(inp);
+  inp.addEventListener('change',function(){
+    var file=inp.files[0];
+    if(!file){if(inp.parentNode)document.body.removeChild(inp);return;}
+    if(file.size>3.5*1024*1024){toast('PDF zu groß (max 3,5 MB)','var(--red)');if(inp.parentNode)document.body.removeChild(inp);return;}
+    var reader=new FileReader();
+    reader.onload=async function(){
+      if(inp.parentNode)document.body.removeChild(inp);
+      await analysePdf(reader.result.split(',')[1]);
+    };
+    reader.readAsDataURL(file);
+  },{once:true});
+  inp.click();
+}
+async function analysePdf(b64){
+  document.getElementById('pdf-step-upload').style.display='none';
+  document.getElementById('pdf-step-loading').style.display='block';
+  try{
+    var resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true','x-api-key':PDF_API_KEY},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',max_tokens:800,
+        system:'Hebriden Reiseplaner 2026. Antworte NUR mit JSON ohne Markdown oder Backticks.',
+        messages:[{role:'user',content:[
+          {type:'document',source:{type:'base64',media_type:'application/pdf',data:b64}},
+          {type:'text',text:'Analysiere dieses Buchungsdokument. Antworte mit JSON: {"name":"","date":"","type":"camp oder food oder ferry oder other","ref":"","note":"","url":"","dayId":"","routing":"Routing-Hinweis 2 Saetze","bookingEntry":{"date":"","name":"","ref":"","url":""}}'}
+        ]}]
+      })
+    });
+    var data=await resp.json();
+    var txt=(data.content||[]).map(function(c){return c.text||'';}).join('').trim();
+    if(!txt)throw new Error('Keine Antwort von KI');
+    pdfResult=JSON.parse(txt.replace(/```json|```/g,'').trim());
+    showPdfResult(pdfResult);
+  }catch(err){
+    document.getElementById('pdf-step-loading').style.display='none';
+    var el=document.getElementById('pdf-step-error');
+    el.style.display='block';
+    el.innerHTML='⚠️ '+esc(err.message)+'<br><br><button onclick="openPdfAnalyse()" style="background:var(--brown);border:none;color:#fff;border-radius:8px;padding:8px 16px;font-size:12px;cursor:pointer;font-family:inherit">Nochmal versuchen</button>';
+  }
+}
+function showPdfResult(r){
+  document.getElementById('pdf-step-loading').style.display='none';
+  var TL={camp:'🏕️ Übernachtung',food:'🍽️ Restaurant',shop:'🛒 Einkauf',sight:'🏰 Sehenswürdigkeit',dispose:'💧 Entsorgung',ferry:'⛴️ Fähre',other:'📍 Sonstiges'};
+  document.getElementById('pdf-r-name').textContent=r.name||'';
+  document.getElementById('pdf-r-date').textContent=r.date||'';
+  document.getElementById('pdf-r-type').textContent=TL[r.type]||'📍';
+  document.getElementById('pdf-r-ref').textContent=r.ref||'';
+  document.getElementById('pdf-r-note').textContent=r.note||'';
+  var rb=document.getElementById('pdf-r-routing');
+  if(r.routing){rb.style.display='block';rb.innerHTML='🗺️ <strong>Routing:</strong><br>'+esc(r.routing);}
+  document.getElementById('pdf-step-result').style.display='block';
+}
+function getPdfVals(){
+  return {
+    name:document.getElementById('pdf-r-name').textContent.trim(),
+    date:document.getElementById('pdf-r-date').textContent.trim(),
+    ref:document.getElementById('pdf-r-ref').textContent.trim(),
+    note:document.getElementById('pdf-r-note').textContent.trim()
+  };
+}
+function adoptPdfProgram(){
+  if(!pdfResult)return;
+  var v=getPdfVals(),r=pdfResult;
+  var dayId=r.dayId||DAYS_DEFAULT[0].id;
+  if(!customEntries[dayId])customEntries[dayId]=[];
+  var TI={camp:'🏕️',food:'🍽️',shop:'🛒',sight:'🏰',dispose:'💧',ferry:'⛴️',other:'📍'};
+  var TLm={camp:'Übernachtung',food:'Restaurant',shop:'Einkauf',sight:'Sehenswürdigkeit',dispose:'Entsorgung',ferry:'Fähre',other:'Sonstiges'};
+  customEntries[dayId].push({id:'c_'+Date.now(),type:r.type||'other',icon:TI[r.type]||'📍',typeLabel:TLm[r.type]||'Sonstiges',name:v.name,date:v.date,url:r.url||'',note:v.note+(v.ref?' · Ref: '+v.ref:''),routing:r.routing||''});
+  save();renderDays();
+  document.getElementById('pdf-modal').style.display='none';
+  toast('✓ Programmpunkt übernommen!','var(--green2)');
+}
+function adoptPdfBooking(){
+  if(!pdfResult)return;
+  var v=getPdfVals(),r=pdfResult,be=r.bookingEntry||{};
+  bookings.push({id:'b_'+Date.now(),date:be.date||v.date,sortDate:'',name:be.name||v.name,ref:be.ref||v.ref,url:be.url||r.url||'',cancelled:false});
+  save();renderBookings();
+  document.getElementById('pdf-modal').style.display='none';
+  toast('✓ Buchung hinzugefügt!','var(--brown)');
+}
+function adoptPdfBoth(){
+  if(!pdfResult)return;
+  adoptPdfProgram();
+  var v=getPdfVals(),r=pdfResult,be=r.bookingEntry||{};
+  bookings.push({id:'b_'+Date.now(),date:be.date||v.date,sortDate:'',name:be.name||v.name,ref:be.ref||v.ref,url:be.url||r.url||'',cancelled:false});
+  save();renderBookings();
+  toast('✓ Alles übernommen!','var(--green2)');
+}
 
 </script>
 </body>
 </html>
+
+<!-- PDF JS wird per Datei angehängt -->
