@@ -1095,7 +1095,7 @@ function triggerUpload(key){
 }
 function openAttachment(key,idx){
   const a=attachments[key]&&attachments[key][idx];
-  if(!a)return;
+  if(!a||!a.data)return;
   try{
     const byteStr=atob(a.data.split(',')[1]);
     const ab=new ArrayBuffer(byteStr.length);
@@ -1135,7 +1135,8 @@ function renderAttachments(key){
 function attBtn(key,label){
   const uid='fu_'+Math.random().toString(36).slice(2);
   const k=JSON.stringify(key);
-  return '<label style="background:transparent;border:1px dashed #aabbd0;color:#1a4a7a;border-radius:7px;padding:4px 9px;font-size:11px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:4px" for="'+uid+'">📎 '+(label||'Beleg anhängen')+'<input id="'+uid+'" type="file" accept="application/pdf,image/*" style="display:none" onchange="handleAttachInput(this,'+k+')"></label>';
+  return '<label style="background:transparent;border:1px dashed #aabbd0;color:#1a4a7a;border-radius:7px;padding:4px 9px;font-size:11px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:4px" for="'+uid+'">📎 '+(label||'Beleg anhängen')+'<input id="'+uid+'" type="file" accept="application/pdf,image/*" style="display:none" onchange="handleAttachInput(this,'+k+')"></label>'
+    +'<span style="font-size:9px;color:#a09080;margin-left:5px">📱 nur lokal</span>';
 }
 
 function handleAttachInput(inp,key){
@@ -1146,8 +1147,14 @@ function handleAttachInput(inp,key){
   reader.onload=function(){
     if(!attachments[key])attachments[key]=[];
     attachments[key].push({name:file.name,data:reader.result,type:file.type});
-    save();renderDays();renderBookings();
-    toast('📎 '+file.name+' angehängt','var(--green2)');
+    try{
+      save();
+      toast('📎 '+file.name+' gespeichert','var(--green2)');
+    }catch(e){
+      toast('⚠️ Datei zu groß für lokalen Speicher','var(--red)');
+      attachments[key].pop();
+    }
+    renderDays();renderBookings();
   };
   reader.readAsDataURL(file);
 }
